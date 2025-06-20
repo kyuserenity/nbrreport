@@ -51,7 +51,7 @@ export default function Page() {
         setAlertMsg("ส่งไม่สำเร็จ ❌");
         setAlertSuccess(false);
       }
-    } catch (err) {
+    } catch (_err) {
       setAlertMsg("เกิดข้อผิดพลาดในการเชื่อมต่อ");
       setAlertSuccess(false);
     } finally {
