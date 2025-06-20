@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (_err) {
+  } catch (err) {
     return NextResponse.json(
       { error: "เกิดข้อผิดพลาดในการส่ง" },
       { status: 500 },
