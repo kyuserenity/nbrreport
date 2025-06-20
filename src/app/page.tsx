@@ -1,103 +1,161 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+
+export default function Page() {
+  const urgentRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMsg, setAlertMsg] = useState("");
+  const [alertSuccess, setAlertSuccess] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  async function doSubmit() {
+    setLoading(true);
+    const form = formRef.current!;
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch("/api/report", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        setAlertMsg("ส่งปัญหาเรียบร้อยแล้ว ✅");
+        setAlertSuccess(true);
+        form.reset();
+      } else {
+        setAlertMsg("ส่งไม่สำเร็จ ❌");
+        setAlertSuccess(false);
+      }
+    } catch (err) {
+      setAlertMsg("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+      setAlertSuccess(false);
+    } finally {
+      setLoading(false);
+      setDialogOpen(false);
+      setAlertOpen(true);
+    }
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setDialogOpen(true);
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+    <div className="flex h-[90vh] items-center justify-center">
+      <div className="w-full max-w-md rounded-md p-6">
+        {/* Dialog ยืนยันการส่ง */}
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>ยืนยันการส่งปัญหา</DialogTitle>
+              <DialogDescription>
+                คุณต้องการส่งปัญหานี้ใช่หรือไม่? กรุณาตรวจสอบข้อมูลก่อนส่ง
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                ยกเลิก
+              </Button>
+              <Button onClick={doSubmit} disabled={loading}>
+                {loading ? "กำลังส่ง..." : "ยืนยันส่ง"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        {/* Alert Dialog แสดงผลหลังส่ง */}
+        <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                {alertSuccess ? "สำเร็จ" : "เกิดข้อผิดพลาด"}
+              </AlertDialogTitle>
+              <AlertDialogDescription>{alertMsg}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction onClick={() => setAlertOpen(false)}>
+                ปิด
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        {/* ฟอร์ม */}
+        <form className="space-y-6" onSubmit={handleSubmit} ref={formRef}>
+          <div className="space-y-2">
+            <h1 className="text-4xl font-extrabold">แจ้งปัญหา</h1>
+            <p>ส่งปัญหาให้กับคุณครูเพื่อให้รับการแก้ไขได้เลยทันที</p>
+          </div>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="d">ปัญหาที่คุณเจอ</Label>
+              <Textarea
+                name="d"
+                placeholder="ระบุปัญหาที่คุณต้องการจะแจ้ง"
+                className="resize-none"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="f">แนบไฟล์</Label>
+              <Input name="f" type="file" />
+            </div>
+            <Separator />
+            <Label className="bg-accent has-[[aria-checked=true]]:text-background has-[[aria-checked=true]]:border-primary has-[[aria-checked=true]]:bg-primary flex cursor-pointer items-center gap-3 rounded-lg border p-3 opacity-50 shadow-xs transition-all has-[[aria-checked=true]]:opacity-100">
+              <Checkbox name="urgent" />
+              <div className="space-y-2">
+                <p className="text-2xl font-semibold">เรื่องเร่งด่วน</p>
+                <div className="text-sm">
+                  <p className="opacity-75">
+                    ถ้าคุณเลือกที่เรื่องเร่งด่วน
+                    ปัญหาจะถูกส่งไปหาครูได้เร็วที่สุด
+                  </p>
+                  <p className="text-destructive">*ใช้ในกรณีจำเป็นเท่านั้น</p>
+                </div>
+              </div>
+            </Label>
+          </div>
+          <div>
+            <Button
+              className="w-full"
+              size="lg"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "กำลังส่ง..." : "ส่งปัญหา"}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
