@@ -125,7 +125,7 @@ export default function Page() {
             </div>
             <Separator />
             <Label className="bg-accent has-[[aria-checked=true]]:text-background has-[[aria-checked=true]]:border-primary has-[[aria-checked=true]]:bg-primary flex cursor-pointer items-center gap-3 rounded-lg border p-3 opacity-50 shadow-xs transition-all has-[[aria-checked=true]]:opacity-100">
-              <Checkbox name="urgent" />
+              <Checkbox className="hidden" name="urgent" />
               <div className="space-y-2">
                 <p className="text-2xl font-semibold">เรื่องเร่งด่วน</p>
                 <div className="text-sm">
