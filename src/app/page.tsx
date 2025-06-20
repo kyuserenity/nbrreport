@@ -14,8 +14,6 @@ import {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-  DialogClose,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   AlertDialog,
@@ -28,7 +26,6 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function Page() {
-  const urgentRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -46,9 +43,6 @@ export default function Page() {
         method: "POST",
         body: formData,
       });
-
-      const result = await res.json();
-
       if (res.ok) {
         setAlertMsg("ส่งปัญหาเรียบร้อยแล้ว ✅");
         setAlertSuccess(true);
