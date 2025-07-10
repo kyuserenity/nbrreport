@@ -44,11 +44,11 @@ export default function Page() {
         body: formData,
       });
       if (res.ok) {
-        setAlertMsg("ส่งปัญหาเรียบร้อยแล้ว ✅");
+        setAlertMsg("ส่งปัญหาเรียบร้อยแล้ว");
         setAlertSuccess(true);
         form.reset();
       } else {
-        setAlertMsg("ส่งไม่สำเร็จ ❌");
+        setAlertMsg("ส่งไม่สำเร็จ");
         setAlertSuccess(false);
       }
     } catch {
@@ -75,7 +75,7 @@ export default function Page() {
             <DialogHeader>
               <DialogTitle>ยืนยันการส่งปัญหา</DialogTitle>
               <DialogDescription>
-                คุณต้องการส่งปัญหานี้ใช่หรือไม่? กรุณาตรวจสอบข้อมูลก่อนส่ง
+                คุณต้องการส่งปัญหานี้ใช่หรือไม่?
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -108,7 +108,7 @@ export default function Page() {
         <form className="space-y-6" onSubmit={handleSubmit} ref={formRef}>
           <div className="space-y-2">
             <h1 className="text-4xl font-extrabold">แจ้งปัญหา</h1>
-            <p>ส่งปัญหาให้กับคุณครูเพื่อให้รับการแก้ไขได้เลยทันที</p>
+            <p>ส่งปัญหาให้กับสภานักเรียนเพื่อให้รับการแก้ไขได้เลยทันที</p>
           </div>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -130,8 +130,7 @@ export default function Page() {
                 <p className="text-2xl font-semibold">เรื่องเร่งด่วน</p>
                 <div className="text-sm">
                   <p className="opacity-75">
-                    ถ้าคุณเลือกที่เรื่องเร่งด่วน
-                    ปัญหาจะถูกส่งไปหาครูได้เร็วที่สุด
+                    ถ้าคุณเลือกที่เรื่องเร่งด่วนปัญหาจะถูกส่งไปหาสภานักเรียนได้เร็วที่สุด
                   </p>
                   <p className="text-destructive">*ใช้ในกรณีจำเป็นเท่านั้น</p>
                 </div>
