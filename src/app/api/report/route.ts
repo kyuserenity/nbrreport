@@ -1,9 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const WEBHOOK_NORMAL =
-  "https://discord.com/api/webhooks/1385623151412514936/4TQVuaA1oFe60gJPMvPbt1KyS1RvHkKVdMHcYo07zUlf4zanMpvjDRCVhnB2yNfN9GyA";
-const WEBHOOK_URGENT =
-  "https://discord.com/api/webhooks/1385623235747385395/wim5vhRIT4_Naomgg76ASX_YI8IjLybQfnt641sWO6t0gizP1EqNETK-lXm4CTP7ubdc";
+const LINE_CHANNEL_ID = process.env.LINE_CHANNEL_ID!;
+const LINE_CHANNEL_SECRET = process.env.LINE_CHANNEL_SECRET!;
+const LINE_GROUP_ID = process.env.LINE_GROUP_ID!;
+
+// ฟังก์ชันขอ access token แบบ short-lived
+async function getLineAccessToken() {
+  const res = await fetch("https://api.line.me/v2/oauth/accessToken", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      grant_type: "client_credentials",
+      client_id: LINE_CHANNEL_ID,
+      client_secret: LINE_CHANNEL_SECRET,
+    }),
+  });
+  if (!res.ok) throw new Error("LINE token error");
+  const data = await res.json();
+  return data.access_token as string;
+}
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
@@ -11,8 +28,6 @@ export async function POST(req: NextRequest) {
   const content = formData.get("d") as string;
   const isUrgent = formData.get("urgent") === "on";
   const file = formData.get("f") as File | null;
-
-  const webhookUrl = isUrgent ? WEBHOOK_URGENT : WEBHOOK_NORMAL;
 
   const now = new Date();
   const thDate = now.toLocaleString("th-TH", {
@@ -24,27 +39,47 @@ export async function POST(req: NextRequest) {
     second: "2-digit",
   });
 
-  let message = `🕒 ส่งเมื่อ : ${thDate}\n✉️ ข้อความ : ${content}`;
+  let message = `🕒 ส่งเมื่อ : ${thDate}\nข้อความ : ${content}`;
   if (isUrgent) {
     message = `${message}\n@everyone`;
   }
 
-  const payload = new FormData();
-  payload.append("content", message);
-
-  if (file && file.size > 0) {
-    payload.append("file", file, file.name);
-  }
-
   try {
-    const res = await fetch(webhookUrl, {
+    const accessToken = await getLineAccessToken();
+
+    // ส่งข้อความ
+    const messages: any[] = [
+      {
+        type: "text",
+        text: message,
+      },
+    ];
+
+    // ถ้ามีไฟล์แนบและเป็นรูปภาพ ให้ส่งเป็น image message
+    if (file && file.size > 0 && file.type.startsWith("image/")) {
+      // อัปโหลดไฟล์ไปยัง image hosting (LINE ไม่รองรับการอัปโหลดไฟล์โดยตรงผ่าน Messaging API)
+      // ที่นี่จะข้ามการอัปโหลดและแนบเฉพาะชื่อไฟล์ไว้ในข้อความ
+      messages.push({
+        type: "text",
+        text: `แนบไฟล์: ${file.name}`,
+      });
+    }
+
+    const res = await fetch("https://api.line.me/v2/bot/message/push", {
       method: "POST",
-      body: payload,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        to: LINE_GROUP_ID,
+        messages,
+      }),
     });
 
     if (!res.ok) {
       return NextResponse.json(
-        { error: "ส่งไป Discord ไม่สำเร็จ" },
+        { error: "ส่งไป LINE OA ไม่สำเร็จ" },
         { status: 500 },
       );
     }

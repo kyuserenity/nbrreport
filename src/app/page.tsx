@@ -123,20 +123,8 @@ export default function Page() {
               <Label htmlFor="f">แนบไฟล์</Label>
               <Input name="f" type="file" />
             </div>
-            <Separator />
-            <Label className="bg-accent has-[[aria-checked=true]]:text-background has-[[aria-checked=true]]:border-primary has-[[aria-checked=true]]:bg-primary flex cursor-pointer items-center gap-3 rounded-lg border p-3 opacity-50 shadow-xs transition-all has-[[aria-checked=true]]:opacity-100">
-              <Checkbox className="hidden" name="urgent" />
-              <div className="space-y-2">
-                <p className="text-2xl font-semibold">เรื่องเร่งด่วน</p>
-                <div className="text-sm">
-                  <p className="opacity-75">
-                    ถ้าคุณเลือกที่เรื่องเร่งด่วนปัญหาจะถูกส่งไปหาสภานักเรียนได้เร็วที่สุด
-                  </p>
-                  <p className="text-destructive">*ใช้ในกรณีจำเป็นเท่านั้น</p>
-                </div>
-              </div>
-            </Label>
           </div>
+          <Separator />
           <div>
             <Button
               className="w-full"
