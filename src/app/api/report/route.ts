@@ -43,12 +43,11 @@ export async function POST(req: NextRequest) {
     second: "2-digit",
   });
 
-  let message = `🕒 ส่งเมื่อ : ${thDate}\n✉️ ข้อความ : ${content}`;
+  const message = `🕒 ส่งเมื่อ : ${thDate}\n✉️ ข้อความ : ${content}`;
 
   try {
     const accessToken = await getLineAccessToken();
 
-    // ส่งข้อความ
     const messages: LineTextMessage[] = [
       {
         type: "text",
