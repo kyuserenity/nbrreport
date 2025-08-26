@@ -31,7 +31,6 @@ export async function POST(req: NextRequest) {
   const formData = await req.formData();
 
   const content = formData.get("d") as string;
-  const isUrgent = formData.get("urgent") === "on";
   const file = formData.get("f") as File | null;
 
   const now = new Date();
@@ -44,10 +43,7 @@ export async function POST(req: NextRequest) {
     second: "2-digit",
   });
 
-  let message = `🕒 ส่งเมื่อ : ${thDate}\nข้อความ : ${content}`;
-  if (isUrgent) {
-    message = `${message}\n@everyone`;
-  }
+  let message = `🕒 ส่งเมื่อ : ${thDate}\n✉️ ข้อความ : ${content}`;
 
   try {
     const accessToken = await getLineAccessToken();
@@ -60,10 +56,7 @@ export async function POST(req: NextRequest) {
       },
     ];
 
-    // ถ้ามีไฟล์แนบและเป็นรูปภาพ ให้ส่งเป็น image message
     if (file && file.size > 0 && file.type.startsWith("image/")) {
-      // อัปโหลดไฟล์ไปยัง image hosting (LINE ไม่รองรับการอัปโหลดไฟล์โดยตรงผ่าน Messaging API)
-      // ที่นี่จะข้ามการอัปโหลดและแนบเฉพาะชื่อไฟล์ไว้ในข้อความ
       messages.push({
         type: "text",
         text: `แนบไฟล์: ${file.name}`,
