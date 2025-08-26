@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -26,11 +25,11 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function Page() {
-  const [loading, setLoading] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMsg, setAlertMsg] = useState("");
-  const [alertSuccess, setAlertSuccess] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [alertOpen, setAlertOpen] = useState<boolean>(false);
+  const [alertMsg, setAlertMsg] = useState<string>("");
+  const [alertSuccess, setAlertSuccess] = useState<boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   async function doSubmit() {

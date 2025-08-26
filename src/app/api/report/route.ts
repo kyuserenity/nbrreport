@@ -22,6 +22,11 @@ async function getLineAccessToken() {
   return data.access_token as string;
 }
 
+type LineTextMessage = {
+  type: "text";
+  text: string;
+};
+
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
 
@@ -48,7 +53,7 @@ export async function POST(req: NextRequest) {
     const accessToken = await getLineAccessToken();
 
     // ส่งข้อความ
-    const messages: any[] = [
+    const messages: LineTextMessage[] = [
       {
         type: "text",
         text: message,
