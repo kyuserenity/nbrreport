@@ -107,23 +107,17 @@ export default function Page() {
         <form className="space-y-6" onSubmit={handleSubmit} ref={formRef}>
           <div className="space-y-2">
             <h1 className="text-4xl font-extrabold">แจ้งปัญหา</h1>
-            <p>ส่งปัญหาให้กับสภานักเรียนเพื่อให้รับการแก้ไขได้เลยทันที</p>
+            <p>ส่งปัญหาให้กับคุณครูเพื่อให้รับการแก้ไขได้เลยทันที</p>
           </div>
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="d">ปัญหาที่คุณเจอ</Label>
+            <div>
               <Textarea
                 name="d"
                 placeholder="ระบุปัญหาที่คุณต้องการจะแจ้ง"
                 className="resize-none"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="f">แนบไฟล์</Label>
-              <Input name="f" type="file" />
-            </div>
           </div>
-          <Separator />
           <div>
             <Button
               className="w-full"

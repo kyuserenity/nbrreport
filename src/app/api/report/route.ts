@@ -4,7 +4,6 @@ const LINE_CHANNEL_ID = process.env.LINE_CHANNEL_ID!;
 const LINE_CHANNEL_SECRET = process.env.LINE_CHANNEL_SECRET!;
 const LINE_GROUP_ID = process.env.LINE_GROUP_ID!;
 
-// ฟังก์ชันขอ access token แบบ short-lived
 async function getLineAccessToken() {
   const res = await fetch("https://api.line.me/v2/oauth/accessToken", {
     method: "POST",
@@ -31,7 +30,6 @@ export async function POST(req: NextRequest) {
   const formData = await req.formData();
 
   const content = formData.get("d") as string;
-  const file = formData.get("f") as File | null;
 
   const now = new Date();
   const thDate = now.toLocaleString("th-TH", {
@@ -54,13 +52,6 @@ export async function POST(req: NextRequest) {
         text: message,
       },
     ];
-
-    if (file && file.size > 0 && file.type.startsWith("image/")) {
-      messages.push({
-        type: "text",
-        text: `แนบไฟล์: ${file.name}`,
-      });
-    }
 
     const res = await fetch("https://api.line.me/v2/bot/message/push", {
       method: "POST",
